@@ -28,3 +28,11 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Project rules
+
+- Pages read data only through `src/services/queries.ts` and write through `src/services/*.service.ts`; swapping the temporary in-memory source (`src/services/data-source.ts` + `src/data/mock-data.ts`) for the real database must not require page changes.
+- Domain types live in `src/lib/types.ts` and mirror `docs/supabase/esquema-propuesto.sql`; keep both in sync.
+- Business rules (low stock, sale totals, stock validation, expiry) are pure functions in `src/lib/business-rules.ts`, covered by `src/test/business-rules.test.ts`.
+- Currency, locale and thresholds come from `src/lib/config.ts`; never hardcode a currency symbol elsewhere except chart axis labels derived from it.
+- Auth is a temporary mock (`src/services/auth.service.ts` + `src/lib/auth.tsx`); signed-in pages live under the pathless `_authenticated` layout, which redirects to `/` (login) when there is no session.
